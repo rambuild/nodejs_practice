@@ -1,0 +1,7 @@
+{
+    "name": "userApi",
+    "version": "0.1.0",
+    "description": "apiDoc basic example",
+    "title": "my personal api",
+    "url" : "localhost:3000"
+  }
