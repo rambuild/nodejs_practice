@@ -9,9 +9,10 @@ var storage = multer.diskStorage({
       cb(null, './static/uploads/img')
     },
     filename: function (req, file, cb) {
-        let mimeName = file.originalname.split('.')[0]
-        let mimeType = file.originalname.split('.')[1]
-      cb(null, mimeName + Date.now() + '.' + mimeType)
+        let mimeName = file.originalname.split('.')[0] == '' ? file.originalname.split('.')[1] : file.originalname.split('.')[0]
+        let mimeType = file.originalname.split('.')
+        let mimeCut = mimeType[mimeType.length-1]
+      cb(null, mimeName + Date.now() + '.' + mimeCut)
     }
 })
 
@@ -38,10 +39,12 @@ var upload = multer({ storage })
 router.post('/upload',upload.single('key'),(req,res)=>{
     const { size,mimetype,path } = req.file
     let imgType = ['jpg','png','jpeg','gif']
-    let mime = mimetype.split('/')[1]
+    let mime = mimetype.split('/')
+    let mimeCut = mime[mime.length-1]
+    console.log(req.file)
     if( size > 512000){
         return res.send({ status:401,msg:"上传的文件不得超过500Kb!" })
-    }else if(imgType.indexOf(mime) == -1){
+    }else if(imgType.indexOf(mimeCut) == -1){
         return res.send({ status:401,msg:"上传的文件必须是图片类型!" })
     }else{
         let url = req.file.filename

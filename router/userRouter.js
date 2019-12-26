@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const User = require('../db/model/userModel')
-const Mail = require('../utils/sendmail')
+const Mailer = require('../utils/sendmail')
 let codes = {}
 
 /**
@@ -24,10 +24,12 @@ router.post('/reg',(req,res)=>{
     User.find({user})
     .then((data)=>{
         console.log(codes)
-        if(data.length !== 0) return res.send({status:403,msg:'用户名已存在'})
-        if(!code || codes.code != code){
+        if(!code){
+            return res.send({ status:401,msg:"请输入验证码！" })
+        }else if(codes.code != code){
             return res.send({ status:401,msg:"验证码错误！" })
         }
+        if(data.length !== 0) return res.send({status:403,msg:'用户名已存在'})
         User.insertMany({user,pwd})
         .then(()=>{            
             res.send({status:200,msg:'注册成功！'})
@@ -55,7 +57,7 @@ router.post('/reg',(req,res)=>{
 
 // 登录
 router.get('/login',(req,res)=>{
-    const { user , pwd } = req.body
+    const { user , pwd } = req.query
     if(!user || !pwd) return res.send({status:400,msg:'用户名和密码必须都填写！'})
     User.find({user,pwd})
     .then((data)=>{
@@ -80,10 +82,11 @@ router.get('/login',(req,res)=>{
 
 // 发送验证码
 router.get('/mail',(req,res)=>{
-    const { mail } = req.body
+    const { mail } = req.query
+    console.log(req.body)
     if(!mail) return res.send({ status:400,msg:"请输入邮箱！" })
     let randomCode = parseInt(Math.random()*100000)
-    Mail.sendMail(mail,randomCode)
+    Mailer.sendMail(mail,randomCode)
     .then(()=>{        
         res.send({ status:200,msg:"验证码发送成功！" })
         codes = {
@@ -95,8 +98,8 @@ router.get('/mail',(req,res)=>{
             codes={}
         },300000)
     })
-    .catch(()=>{        
-        res.send({ status:500,msg:"验证码发送失败！" })
+    .catch((err)=>{        
+        res.send({ status:500,msg:err })
     })
 })
 

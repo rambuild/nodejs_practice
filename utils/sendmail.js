@@ -13,14 +13,14 @@ function sendMail(mail, code) {
     let mailObj = {
         from: "<fyhlamp@163.com>",
         to: mail,
-        subject: "this is subject!",
+        subject: "您好!",
         // text:'this is text!',
-        html: `<b>您的验证码是：<i>${code}</i>，有效期5分钟！</b>`
+        html: `<b>your verifyCode is <i>${code},limit 5 minutes!</i></b>`
     }
     return new Promise((resolve,reject)=>{
         transporter.sendMail(mailObj, (err, data) => {
             if(err){
-                reject()
+                reject(err)
             }else{
                 resolve()
             }

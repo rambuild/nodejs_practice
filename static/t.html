@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src='https://cdn.bootcss.com/jquery/3.4.1/jquery.js' type='text/javascript'></script>
+</head>
+
+<body>
+    
+    <input type="file" id='file'>
+    <input type="submit" onclick="submit()">
+    <img src="" alt="" id='img'>
+
+    <script>
+        function submit(){
+            let el = $('#file').get(0).files[0]
+            var formDatas = new FormData()
+            formDatas.append('key',el)
+            $.ajax({
+                url:'http://localhost:3000/file/upload',
+                type:'POST',
+                cache:false,
+                data:formDatas,
+                processData:false,
+                contentType:false,
+                success:function(data){
+                    console.log(data)
+                    $('#img').attr('src',`http://localhost:3000/${data.filepath}`)
+                }
+            })
+        }
+
+    </script>
+</body>
+
+</html>
