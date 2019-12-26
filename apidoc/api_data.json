@@ -130,6 +130,49 @@
   },
   {
     "type": "post",
+    "url": "/food/getInfoByPage",
+    "title": "分页查询食品信息",
+    "name": "getInfoByPage",
+    "group": "Food",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "pagenum",
+            "description": "<p>页码</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Number",
+            "optional": false,
+            "field": "pagesize",
+            "description": "<p>每页显示的数据个数</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "status",
+            "description": "<p>200</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "router/foodRouter.js",
+    "groupTitle": "Food"
+  },
+  {
+    "type": "post",
     "url": "/food/update",
     "title": "修改食品信息",
     "name": "updateFood",

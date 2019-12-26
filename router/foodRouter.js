@@ -134,7 +134,7 @@ router.post('/del',(req,res)=>{
  })
 
 /**
- * @api {post} /food/getInfoByPage 修改食品信息
+ * @api {post} /food/getInfoByPage 分页查询食品信息
  * @apiName getInfoByPage
  * @apiGroup Food
  *
