@@ -6,6 +6,7 @@ const router = express.Router()
 const db = require('./db/connect')
 const cors = require('cors')
 const request = require('request')
+const JWT = require('./utils/jwt')
 
 // 公用中间件
 app.use('/static',express.static(path.join(__dirname,'./static')))
@@ -22,7 +23,18 @@ const userRouter = require('./router/userRouter')
 app.use('/user',userRouter)
 
 const foodRouter = require('./router/foodRouter')
-app.use('/food',foodRouter)
+app.use('/food',(req,res,next)=>{
+    const { token } = req.body
+    console.log(req.body)
+    JWT.verifyToken(token)
+        .then(data=>{
+            console.log(data)
+            next()
+        })
+        .catch(err=>{
+            res.send({ status:401,msg:"无效Token！" })
+        })
+},foodRouter)
 
 const clothRouter = require('./router/clothRouter')
 app.use('/cloth',clothRouter)

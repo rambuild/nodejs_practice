@@ -2,6 +2,8 @@ const express = require('express')
 const router = express.Router()
 const User = require('../db/model/userModel')
 const Mailer = require('../utils/sendmail')
+// jsonwebtoken
+const JWT = require('../utils/jwt')
 let codes = {}
 
 /**
@@ -62,7 +64,16 @@ router.get('/login',(req,res)=>{
     User.find({user,pwd})
     .then((data)=>{
         if(data.length == 0) return res.send({status:401,msg:'用户名或密码错误！'})
-        res.send({status:200,msg:'登录成功！'})
+        const token = JWT.creatToken({ uid:'500',secret:null })
+        JWT.verifyToken(token)
+        .then(data=>{
+            console.log(data)
+        })
+        .catch(err=>{
+            console.log(err)
+        })
+        
+        res.send({status:200,msg:'登录成功！',token})
     })
     .catch((err)=>{
         res.send({status:500,msg:'内部错误'})
@@ -100,6 +111,26 @@ router.get('/mail',(req,res)=>{
     })
     .catch((err)=>{        
         res.send({ status:500,msg:err })
+    })
+})
+
+/**
+ * @api {get} /user/userlist 查询用户列表
+ * @apiName userlist
+ * @apiGroup User
+ *
+ * @apiSuccess {Number} 200 查询成功
+ * @apiError {Number} 400 查询失败
+ */
+
+// 获取用户列表
+router.get('/userlist',(req,res)=>{
+    User.find({})
+    .then(data=>{
+        res.send({ status:200,msg:'查询用户成功！',content:data })
+    })
+    .catch(err=>{
+        res.send({ status:400,msg:'查询用户失败！',content:err })
     })
 })
 

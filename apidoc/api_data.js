@@ -329,6 +329,42 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/user/userlist",
+    "title": "查询用户列表",
+    "name": "userlist",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "Number",
+            "optional": false,
+            "field": "200",
+            "description": "<p>查询成功</p>"
+          }
+        ]
+      }
+    },
+    "error": {
+      "fields": {
+        "Error 4xx": [
+          {
+            "group": "Error 4xx",
+            "type": "Number",
+            "optional": false,
+            "field": "400",
+            "description": "<p>查询失败</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "router/userRouter.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "get",
     "url": "/user/mail",
     "title": "发送验证码",
     "name": "verificationCode",

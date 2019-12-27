@@ -1,6 +1,7 @@
 {
   "devDependencies": {
-    "fs": "^0.0.1-security"
+    "fs": "^0.0.1-security",
+    "node-sass": "^4.13.0"
   },
   "dependencies": {
     "body-parser": "^1.19.0",

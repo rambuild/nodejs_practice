@@ -16,21 +16,30 @@ const foodSchema = require('../db/model/foodModel')
  */
 
 router.post('/add', (req, res) => {
-    const { name } = req.body
+    const { name,desc,price,introduce } = req.body
     let food = {
         name,
-        desc: '好吃',
-        price: 39,
-        introduce: "好吃的菜品，咸淡适中，大多数人的首选。"
+        desc,
+        price,
+        introduce
+    }
+    if( !name || !desc || !price || !introduce ){
+        return res.send({
+            status:400,
+            msg:'请填写所有必须项！'
+        })
     }
     foodSchema.insertMany(food)
-        .then(() => {
+        .then((data) => {
             res.send({
-                msg: '添加商品成功'
+                status:200,
+                msg: '添加商品成功',
+                list:data
             })
         })
         .catch(() => {
             res.send({
+                status:200,
                 msg: '添加商品失败'
             })
         })    
@@ -88,17 +97,26 @@ router.post('/findByIntro', (req, res) => {
  * @apiSuccess {Number} status 200
  */
 
-router.post('/del',(req,res)=>{
-    const { _id } = req.body
-    foodSchema.remove({ _id })
+router.delete('/del',(req,res)=>{
+    const { id } = req.query
+    console.log(req.query)
+    if( !id ){
+        return res.send({
+            status:400,
+            msg:"请输入需要删除的ID"
+        })
+    }
+    foodSchema.remove({ _id:id })
     .then((data) => {
         res.send({
+            status:200,
             msg: `删除成功！删除了${data.deletedCount}条数据`,
             list: data
         })
     })
     .catch((err) => {
         res.send({
+            status:400,
             msg: '删除失败！',
             info: err
         })
@@ -145,25 +163,28 @@ router.post('/del',(req,res)=>{
  */
 
 router.post('/getInfoByPage',(req,res)=>{
-    // pagesize默认值5  pagenum默认值1
-    var { pagesize } = req.body
-    var { pagenum } = req.body
+    const { pagesize,pagenum } = req.body
     if(!pagenum || !pagesize){
-        pagesize = 5
-        pagenum = 1
+        return res.send({ status:400,msg:'请传入页码及每页显示的数量' })
     }
+    let totalNum = 0
+    foodSchema.find()
+    .then(data=>{
+        totalNum = data.length
+    })
     // 跳过(pagenum-1)*pagesize条取pagesize条，以实现分页功能
     foodSchema.find().limit(Number(pagesize)).skip(Number((pagenum-1)*pagesize))
     .then((data) => {
-        console.log(pagesize)
-        console.log(pagenum)
         res.send({
+            status:200,
             msg: `通过页码查询成功`,
-            list: data
+            list: data,
+            total:totalNum
         })
     })
     .catch((err) => {
         res.send({
+            status:400,
             msg: '通过页码查询失败！',
             info: err
         })
