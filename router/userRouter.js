@@ -64,7 +64,7 @@ router.get('/login',(req,res)=>{
     User.find({user,pwd})
     .then((data)=>{
         if(data.length == 0) return res.send({status:401,msg:'用户名或密码错误！'})
-        const token = JWT.creatToken({ uid:'500',secret:null })
+        const token = JWT.creatToken({ user,secret:null })
         JWT.verifyToken(token)
         .then(data=>{
             console.log(data)

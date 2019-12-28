@@ -24,15 +24,15 @@ app.use('/user',userRouter)
 
 const foodRouter = require('./router/foodRouter')
 app.use('/food',(req,res,next)=>{
-    const { token } = req.body
-    console.log(req.body)
+    // console.log(req.headers)
+    let { authorization : token } = req.headers
     JWT.verifyToken(token)
         .then(data=>{
             console.log(data)
             next()
         })
         .catch(err=>{
-            res.send({ status:401,msg:"无效Token！" })
+            res.send({ status:401,msg:err })
         })
 },foodRouter)
 

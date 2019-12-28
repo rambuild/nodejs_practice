@@ -136,7 +136,7 @@ router.delete('/del',(req,res)=>{
 
  router.post('/update',(req,res)=>{
      let { desc } = req.body
-     foodSchema.updateOne({ name:'香干回锅肉' },{ desc })
+     foodSchema.updateMany({ name:'1' },{ $inc:{ "price":-6 } })
      .then((data) => {
         res.send({
             msg: `修改成功`,
@@ -161,19 +161,18 @@ router.delete('/del',(req,res)=>{
  *
  * @apiSuccess {Number} status 200
  */
-
 router.post('/getInfoByPage',(req,res)=>{
     const { pagesize,pagenum } = req.body
     if(!pagenum || !pagesize){
         return res.send({ status:400,msg:'请传入页码及每页显示的数量' })
     }
     let totalNum = 0
-    foodSchema.find()
+    foodSchema.find({})
     .then(data=>{
         totalNum = data.length
     })
     // 跳过(pagenum-1)*pagesize条取pagesize条，以实现分页功能
-    foodSchema.find().limit(Number(pagesize)).skip(Number((pagenum-1)*pagesize))
+    foodSchema.find({}).limit(Number(pagesize)).skip(Number((pagenum-1)*pagesize))
     .then((data) => {
         res.send({
             status:200,
